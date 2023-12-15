@@ -242,4 +242,44 @@ n() {
     fi
 }
 
+# go to mac-setup directory
+alias mac='cd ~/Github/mac-setup/'
+
+# copy configs to mac-setup
+maccp() {
+    cp -r ~/.config/helix/* ~/Github/mac-setup/config/helix/
+    echo "helix config copied"
+    cp -r ~/.config/kitty/* ~/Github/mac-setup/config/kitty/
+    echo "kitty config copied"
+    cp -r ~/.config/linearmouse/* ~/Github/mac-setup/config/linearmouse/
+    echo "linearmouse config copied"
+    cp -r ~/.config/ranger/* ~/Github/mac-setup/config/ranger/
+    echo "ranger config copied"
+    cp -r ~/.config/skhd/* ~/Github/mac-setup/config/skhd/
+    echo "skhd config copied"
+    cp -r ~/.config/yabai/* ~/Github/mac-setup/config/yabai/
+    echo "yabai config copied"
+
+    cp ~/.gitconfig ~/Github/mac-setup/git/
+    cp ~/.gitconfig-github ~/Github/mac-setup/git/
+    cp ~/.gitconfig-gitlab ~/Github/mac-setup/git/
+    cp ~/.gitignore ~/Github/mac-setup/git/
+    echo "git config copied"
+
+    cp ~/.zshrc ~/Github/mac-setup/zsh/
+    echo "zsh config copied"
+
+    echo ""
+    echo "all configs copied to mac-setup!"
+}
+
+# copy configs to mac-setup and push to github
+macup() {
+    mac
+    maccp
+    git add --all
+    git commit -a -m "$@"
+    git push
+}
+
 . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
