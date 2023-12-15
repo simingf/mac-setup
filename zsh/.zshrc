@@ -60,7 +60,7 @@ alias srs="skhd --restart-service"
 alias yrc="hx ~/.config/yabai/yabairc"
 alias yrs="yabai --restart-service"
 alias cf="builtin cd ~/.config && ls"
-alias ub='builtin cd ~/Library/Application\ Support/Übersicht/widgets/ && ls'
+alias ub='builtin cd ~/.config/ubersicht && ls'
 alias ch="rm -f ~/.zsh_history && clear"
 
 # enter alias
