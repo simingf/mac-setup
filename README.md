@@ -93,3 +93,15 @@ Little Snith
 Logic Pro
 Melodyne 5
 Yoink
+
+## Alfred Workflows
+Amazon Suggest
+Arc Tabs and Spaces
+FZF
+Google Scholar Suggest
+Google Suggest
+Homebrew
+Mouseless Messenger
+Spotify Mini Player
+System Settings
+Urban Dictionary
