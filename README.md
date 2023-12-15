@@ -31,7 +31,6 @@ zsh
 
 ## Homebrew Casks
 alt-tab
-apparency
 appcleaner
 arc
 discord
@@ -48,13 +47,8 @@ minecraft
 miniconda
 notion
 qbittorrent
-qlmarkdown
-qlvideo
-quicklook-csv
 spotify
 steam
-suspicious-package
-syntax-highlight
 the-unarchiver
 tyke
 ubersicht
