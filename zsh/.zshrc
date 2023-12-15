@@ -24,11 +24,17 @@ fi
 alias e='exit'
 alias f='open . && exit'
 alias rm='rm -r'
+# print out path and copy the path
 alias pwd='pwd && pwd | pbcopy'
+# accepts path name
 alias mkdir='mkdir -p'
+# clears screenshot folder
 alias css='rm -f ~/Screenshots/* && echo "screenshots cleared"'
+# updates homebrew
 alias bup='brew update && brew autoremove && brew cleanup && brew upgrade'
+# lists global node modules
 alias npmg='npm list -g --depth 0'
+# call this function when yabai updates
 alias yup='echo "$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d " " -f 1) $(which yabai) --load-sa" &&
 echo && echo "paste into:" &&
 echo "/private/etc/sudoers.d/yabai"'
@@ -43,7 +49,6 @@ alias des='builtin cd ~/Desktop/ && ls'
 alias ss='builtin cd ~/Screenshots/ && ls'
 alias hub='builtin cd ~/Github/ && ls'
 alias lab='builtin cd ~/Gitlab/ && ls'
-alias kd='builtin cd ~/Gitlab/auto-agent-fengsm/ && ls'
 alias bs='builtin cd ~/Github/boss-system/ && ls'
 alias bc='builtin cd ~/Github/boss-code/ && ls'
 alias euler='builtin cd ~/euler/ && ls'
@@ -119,8 +124,10 @@ g() {
         git commit -m "$@"
     elif [[ "$1" == "clone" ]]; then
         shift
-        git clone "$1" && builtin cd "$(basename "$1" .git)" #cd into cloned directory
+        #cd into cloned directory
+        git clone "$1" && builtin cd "$(basename "$1" .git)" 
     elif [[ "$@" == "ignore" ]]; then
+        # fix .gitignore when files are already tracked
         git rm -r --cached .
         git add .
         git commit -m "fix: .gitignore"
@@ -141,6 +148,8 @@ g() {
 alias gup='g up'
 
 # conda function
+. "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+
 c() {
     if [[ "$@" == "" ]]; then
         clear
@@ -153,10 +162,6 @@ c() {
         conda "$@"
     fi
 }
-
-alias cab='conda activate base'
-alias cak='conda activate knowdee'
-alias caf='conda activate firebase'
 
 # python function
 p() {
@@ -184,7 +189,7 @@ h() {
     fi
 }
 
-# image function
+# image magick function
 img() {
     magick "$1" "$2"
     rm "$1"
@@ -281,4 +286,3 @@ macup() {
     git push
 }
 
-. "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
