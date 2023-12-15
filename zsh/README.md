@@ -1,0 +1,1 @@
+Put this file in the home directory.

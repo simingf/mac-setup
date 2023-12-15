@@ -1,0 +1,1 @@
+Rename folder to .config and put in home directory.

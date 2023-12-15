@@ -1,0 +1,8 @@
+[includeIf "gitdir:~/Github/"]
+	path = ~/.gitconfig-github
+[includeIf "gitdir:~/Gitlab/"]
+	path = ~/.gitconfig-gitlab
+[core]
+	excludesfile = /Users/siming/.gitignore
+[pull]
+	rebase = false
