@@ -25,7 +25,6 @@ python
 ranger
 spotify-tui
 sqlite
-thefuck
 tree
 wget
 yt-dlp

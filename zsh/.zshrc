@@ -8,7 +8,7 @@ DISABLE_AUTO_TITLE="true"
 
 # ZSH_THEME="frontcube"
 ZSH_THEME="theunraveler"
-plugins=(colored-man-pages thefuck zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(colored-man-pages zsh-syntax-highlighting zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
