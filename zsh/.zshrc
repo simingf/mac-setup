@@ -51,7 +51,6 @@ alias dp='builtin cd ~/atcoder-dp/ && ls'
 
 # app aliases
 alias rg='ranger'
-alias feh='open -b "drabweb.macfeh"'
 
 # config aliases
 alias zrc="hx ~/.zshrc"

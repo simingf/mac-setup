@@ -23,7 +23,6 @@ node
 php
 python
 ranger
-spotify-tui
 sqlite
 tree
 wget
