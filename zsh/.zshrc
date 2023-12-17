@@ -175,7 +175,7 @@ p() {
 # code functions
 k() {
     if [[ "$@" == "" ]]; then
-        code . && exit
+        code .
     else
         code "$@"
     fi
