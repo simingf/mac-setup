@@ -1,3 +1,12 @@
+export const Docker = (props) => (
+  <Icon {...props}>
+    <g transform="translate(-3.000000, -5.000000) scale(0.06, 0.07)" >
+      <path stroke="#FFFFFF" stroke-width="38" d="M296 226h42m-92 0h42m-91 0h42m-91 0h41m-91 0h42m8-46h41m8 0h42m7 0h42m-42-46h42"/>
+      <path d="m472 228s-18-17-55-11c-4-29-35-46-35-46s-29 35-8 74c-6 3-16 7-31 7H68c-5 19-5 145 133 145 99 0 173-46 208-130 52 4 63-39 63-39"/>
+    </g>
+  </Icon>
+)
+
 export const Steam = (props) => (
   <Icon {...props}>
       <g transform="translate(-1.000000,25.000000) scale(0.08,-0.08)" stroke="none">
