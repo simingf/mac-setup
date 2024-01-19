@@ -1,27 +1,14 @@
 {
-  "$schema" : "https:\/\/schema.linearmouse.app\/0.9.5",
   "schemes" : [
     {
-      "if" : {
-        "device" : {
-          "vendorID" : "0x46d",
-          "productID" : "0xc547",
-          "productName" : "USB Receiver",
-          "category" : "mouse"
-        }
-      },
-      "pointer" : {
-        "disableAcceleration" : true,
-        "acceleration" : 1
-      },
       "scrolling" : {
         "acceleration" : 0.8,
-        "reverse" : {
-          "vertical" : true
-        },
         "distance" : "auto",
         "modifiers" : {
           "vertical" : {
+            "option" : {
+              "type" : "auto"
+            },
             "command" : {
               "type" : "auto"
             },
@@ -30,17 +17,43 @@
             },
             "control" : {
               "type" : "auto"
-            },
-            "option" : {
-              "type" : "auto"
             }
           }
         },
+        "reverse" : {
+          "vertical" : true
+        },
         "speed" : 5
+      },
+      "if" : {
+        "device" : {
+          "productID" : "0xc547",
+          "category" : "mouse",
+          "productName" : "USB Receiver",
+          "vendorID" : "0x46d"
+        }
       },
       "buttons" : {
         "universalBackForward" : false
+      },
+      "pointer" : {
+        "acceleration" : 1,
+        "disableAcceleration" : true
+      }
+    },
+    {
+      "if" : {
+        "device" : {
+          "productName" : "JLab GO Charge",
+          "productID" : "0x2fc",
+          "vendorID" : "0x145f",
+          "category" : "mouse"
+        }
+      },
+      "pointer" : {
+        "speed" : 0.5
       }
     }
-  ]
+  ],
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.9.5"
 }
