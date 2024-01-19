@@ -39,7 +39,6 @@ yt-dlp
 zsh
 
 ## Homebrew Casks
-alt-tab
 appcleaner
 arc
 burp-suite
