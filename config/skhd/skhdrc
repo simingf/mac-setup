@@ -57,6 +57,9 @@ alt - return : yabai -m window --toggle zoom-fullscreen
 # toggle window float
 alt - f : yabai -m window --toggle float --grid 4:4:1:1:2:2
 
+# toggle window sticky
+alt - t : yabai -m window --toggle sticky
+
 # make floating window fill screen
 shift + alt - up     : yabai -m window --grid 1:1:0:0:1:1
 
