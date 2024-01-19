@@ -66,6 +66,7 @@ ubersicht
 visual-studio-code
 wechat
 whatsapp
+wireshark
 zoom
 
 ## Command Line Tools
