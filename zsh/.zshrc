@@ -110,6 +110,8 @@ cd() {
 }
 
 # git function
+alias lg='lazygit'
+
 g() {
     if [[ "$@" == "" ]]; then
         git status
