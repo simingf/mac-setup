@@ -36,8 +36,7 @@ alias bup='brew update && brew autoremove && brew cleanup && brew upgrade'
 alias npmg='npm list -g --depth 0'
 # call this function when yabai updates
 alias yup='echo "$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d " " -f 1) $(which yabai) --load-sa" &&
-echo && echo "paste into:" &&
-echo "/private/etc/sudoers.d/yabai"'
+echo && echo "sudo visudo -f /private/etc/sudoers.d/yabai"'
 
 # directory aliases
 alias ls='ls -AG'
