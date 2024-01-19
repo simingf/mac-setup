@@ -48,8 +48,6 @@ alias des='builtin cd ~/Desktop/ && ls'
 alias ss='builtin cd ~/Screenshots/ && ls'
 alias hub='builtin cd ~/Github/ && ls'
 alias lab='builtin cd ~/Gitlab/ && ls'
-alias bs='builtin cd ~/Github/boss-system/ && ls'
-alias bc='builtin cd ~/Github/boss-code/ && ls'
 alias euler='builtin cd ~/euler/ && ls'
 alias dp='builtin cd ~/atcoder-dp/ && ls'
 
@@ -57,15 +55,15 @@ alias dp='builtin cd ~/atcoder-dp/ && ls'
 alias rg='ranger'
 
 # config aliases
-alias zrc="hx ~/.zshrc"
 alias rs="clear && source ~/.zshrc"
-alias src="hx ~/.config/skhd/skhdrc"
-alias srs="skhd --restart-service"
+alias ch="rm -f ~/.zsh_history && clear"
+alias zrc="hx ~/.zshrc"
 alias yrc="hx ~/.config/yabai/yabairc"
 alias yrs="yabai --restart-service"
+alias src="hx ~/.config/skhd/skhdrc"
+alias srs="skhd --restart-service"
 alias cf="builtin cd ~/.config && ls"
 alias ub='builtin cd ~/.config/ubersicht && ls'
-alias ch="rm -f ~/.zsh_history && clear"
 
 # enter alias
 accept-line() {
@@ -84,24 +82,24 @@ cd() {
     # if no DIR given, go home
     if [[ "$@" == "" ]]; then
         builtin cd $HOME && ls
-    # if the path only contains . and /
+    # if the path only contains '.' and '/' (moving up dir tree)
     elif [[ "$@" =~ ^[./-]+$ ]]; then
         builtin cd "$@" && ls
-    # if the path contains a /
+    # if the path contains at least one '/' (i tabbed it)
     elif [[ "$@" == *"/"* ]]; then
         builtin cd "$@" && ls
     else
-        # find exact match
+        # try to find exact match for dirname first
         EXACT=$(find . -maxdepth 1 -type d -iname "$@" -print -quit)
         if [[ $EXACT != "" ]]; then
             builtin cd "${EXACT}" && ls
         else
-            # find all dirs that contain string
+            # find all dirnames that contain search string
             DIRS=$(find . -maxdepth 1 -type d -iname "*$@*" -print -quit)
             if [[ $DIRS == "" ]]; then
                 echo "ERROR: no match found" 
             else
-                # cd to first match
+                # cd into first match
                 DIR=${DIRS%%*"\n"}
                 builtin cd "${DIR}" && ls
             fi
@@ -144,7 +142,7 @@ c() {
     if [[ "$@" == "" ]]; then
         clear
     elif [[ "$1" == "a" ]]; then
-        shift 
+        shift
         conda activate "$@"
     elif [[ "$@" == "d" ]]; then
         conda deactivate
@@ -188,10 +186,13 @@ img() {
 # search notes
 n() {
     if [[ "$@" == "" ]]; then
+        # list all notes
         ls ~/Documents/Notes/
     elif [[ "$@" == "go" ]]; then
+        # go to notes dir
         cd ~/Documents/Notes/
     elif [[ "$1" == "h" ]]; then
+        # search for notes that match query and edit all matches w helix
         shift
         IFS=$'\n'
         INPUT="$@"
@@ -206,17 +207,20 @@ n() {
         fi
         unset IFS
     elif [[ "$1" == "n" ]]; then
+        # make a new note and edit w helix
         shift
         INPUT="$@"
         FILE=~/Documents/Notes/"$INPUT".txt
         touch "$FILE"
         hx "$FILE"
     elif [[ "$1" == "rm" ]]; then
+        # search for exact note name and remove it
         shift
         INPUT="$@"
         FILE=~/Documents/Notes/"$INPUT".txt
         rm -f "$FILE"
     else
+        # search for notes that match query and display all matches
         IFS=$'\n'
         INPUT="$@"
         FILES=$(find ~/Documents/Notes -type f -iname "*$INPUT*" -print)
