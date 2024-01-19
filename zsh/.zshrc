@@ -19,6 +19,7 @@ else
 fi
 
 # User configuration
+alias ta='cd ~/CS166HTA/dev-env/ && ./cs1660-run-docker'
 
 # general aliases
 alias e='exit'
