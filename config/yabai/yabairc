@@ -7,43 +7,52 @@ sudo yabai --load-sa
 
 # mission-control desktop labels
 yabai -m space 1 --label home
-yabai -m space 2 --label web
-yabai -m space 3 --label work
-yabai -m space 4 --label msg
-yabai -m space 5 --label fun
-yabai -m space 6 --label ipad
+yabai -m space 2 --label msg
+yabai -m space 3 --label web
+yabai -m space 4 --label work1
+yabai -m space 5 --label work2
+yabai -m space 6 --label fun
 
-yabai -m config --space home layout float
-yabai -m config --space msg layout float
-yabai -m config --space fun layout float
+yabai -m config --space home layout stack
+yabai -m config --space msg layout stack
+yabai -m config --space web layout bsp
+yabai -m config --space work1 layout bsp
+yabai -m config --space work2 layout bsp
+yabai -m config --space fun layout stack
 
-yabai -m rule --add app="^Notion$" space=home manage=off layer=normal
-yabai -m rule --add app="^Microsoft To Do$" space=home manage=off layer=normal
-yabai -m rule --add app="^Calendar$" space=home manage=off layer=normal
-yabai -m rule --add app="^SelfControl$" space=home manage=off layer=normal
-yabai -m rule --add app="^Arc$" space=web layer=normal
-yabai -m rule --add app="^Preview$" space=work layer=normal
-yabai -m rule --add app="^Microsoft Word$" space=work layer=normal
-yabai -m rule --add app="^Microsoft PowerPoint$" space=work layer=normal
-yabai -m rule --add app="^Microsoft Excel$" space=work layer=normal
-yabai -m rule --add app="^iA Writer$" space=work layer=normal
-yabai -m rule --add app="^Code$" space=work layer=normal
-yabai -m rule --add app="^Qt Creator$" space=work layer=normal
-yabai -m rule --add app="^Discord$" space=msg manage=off layer=normal
-yabai -m rule --add app="^WeChat$" space=msg manage=off layer=normal
-yabai -m rule --add app="^WhatsApp$" space=msg manage=off layer=normal
-yabai -m rule --add app="^Messages$" space=msg manage=off layer=normal
-yabai -m rule --add app="^FaceTime$" space=msg manage=off layer=normal
-yabai -m rule --add app="^zoom.us$" space=msg manage=off layer=normal
-yabai -m rule --add app="^Spotify$" space=fun manage=off layer=normal
-yabai -m rule --add app="^IINA$" space=fun manage=off layer=normal
-yabai -m rule --add app="^qBittorrent$" space=fun manage=off layer=normal
-yabai -m rule --add app="^Steam Helper$" space=fun manage=off layer=normal
-yabai -m rule --add app="^Epic Games Launcher$" space=fun manage=off layer=normal
+yabai -m rule --add app="^Notion$" space=home
+yabai -m rule --add app="^Microsoft To Do$" space=home
+yabai -m rule --add app="^Calendar$" space=home
+yabai -m rule --add app="^SelfControl$" space=home
 
-yabai -m rule --add app="^(Activity Monitor|Alfred Preferences|AltTab|App Store|Finder|Installer|LetsVPN|macfeh|Photo Booth|Software Update|System Settings|Stickies|The Unarchiver|MediaMate|Stardew Valley)$" manage=off layer=normal
+yabai -m rule --add app="^Discord$" space=msg manage=off
+yabai -m rule --add app="^WeChat$" space=msg manage=off
+yabai -m rule --add app="^WhatsApp$" space=msg manage=off
+yabai -m rule --add app="^Messages$" space=msg manage=off
+yabai -m rule --add app="^FaceTime$" space=msg manage=off
+yabai -m rule --add app="^zoom.us$" space=msg manage=off
 
-# global settings
+yabai -m rule --add app="^Arc$" space=web
+
+yabai -m rule --add app="^Code$" space=work1
+yabai -m rule --add app="^Qt Creator$" space=work1
+yabai -m rule --add app="^Docker Desktop$" space=work1
+
+yabai -m rule --add app="^Microsoft Word$" space=work2
+yabai -m rule --add app="^Microsoft PowerPoint$" space=work2
+yabai -m rule --add app="^Microsoft Excel$" space=work2
+yabai -m rule --add app="^iA Writer$" space=work2
+
+yabai -m rule --add app="^Spotify$" space=fun
+yabai -m rule --add app="^IINA$" space=fun
+yabai -m rule --add app="^qBittorrent$" space=fun
+yabai -m rule --add app="^Steam Helper$" space=fun
+yabai -m rule --add app="^Epic Games Launcher$" space=fun
+
+yabai -m rule --add app="^(Finder|Activity Monitor|Alfred Preferences|AltTab|Installer|Photo Booth|Software Update|System Settings|Stickies|The Unarchiver|MediaMate)$" manage=off
+
+global settings
+
 yabai -m config                              \
     mouse_follows_focus         off          \
     focus_follows_mouse         off          \
@@ -78,7 +87,7 @@ yabai -m config bottom_padding               10
 yabai -m config left_padding                 10
 yabai -m config right_padding                10
 yabai -m config window_gap                   10
-yabai -m config external_bar                 all:0:35
+yabai -m config external_bar                 all:00:00
 
 # signals
 yabai -m signal --add event=window_destroyed active=yes action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse &> /dev/null || yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id) &> /dev/null"
