@@ -36,8 +36,8 @@ yabai -m rule --add app="^Arc$" space=web
 
 yabai -m rule --add app="^Code$" space=work1
 yabai -m rule --add app="^Qt Creator$" space=work1
-yabai -m rule --add app="^Docker Desktop$" space=work1
 
+yabai -m rule --add app="^Docker Desktop$" space=work2
 yabai -m rule --add app="^Microsoft Word$" space=work2
 yabai -m rule --add app="^Microsoft PowerPoint$" space=work2
 yabai -m rule --add app="^Microsoft Excel$" space=work2
