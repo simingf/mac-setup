@@ -110,22 +110,18 @@ cd() {
 }
 
 # git function
-alias lg='lazygit'
-
 g() {
     if [[ "$@" == "" ]]; then
         git status
     elif [[ "$1" == "up" ]]; then
+        # add, commit, push all untracked and modified files
         shift
         git add --all
         git commit -a -m "$@"
         git push
-    elif [[ "$1" == "commit" ]]; then
-        shift
-        git commit -m "$@"
     elif [[ "$1" == "clone" ]]; then
+        # cd into cloned directory
         shift
-        #cd into cloned directory
         git clone "$1" && builtin cd "$(basename "$1" .git)" 
     elif [[ "$@" == "ignore" ]]; then
         # fix .gitignore when files are already tracked
@@ -133,19 +129,12 @@ g() {
         git add .
         git commit -m "fix: .gitignore"
         git push
-    elif [[ "$@" == "diff" ]]; then
-        git diff --name-status | head --lines=29
-    elif [[ "$@" == "branch" ]]; then
-        git branch -vv | head --lines=29
-    elif [[ "$@" == "log" ]]; then
-        git log | head --lines=29
-    elif [[ "$@" == "stash list" ]]; then
-        git stash list | head --lines=29
     else
         git "$@"
     fi
 }
 
+alias lg='lazygit'
 alias gup='g up'
 
 # conda function
