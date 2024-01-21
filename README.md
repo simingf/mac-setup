@@ -105,6 +105,5 @@ fzf-alfred-workflow
 Google Scholar Suggest
 Google Suggest
 Homebrew
-Spotify Mini Player
 System Settings
 Urban Dictionary
