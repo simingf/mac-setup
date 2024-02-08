@@ -1,59 +1,72 @@
 {
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.9.5",
   "schemes" : [
     {
       "scrolling" : {
-        "acceleration" : 0.8,
+        "reverse" : {
+          "vertical" : true
+        },
         "distance" : "auto",
+        "acceleration" : 0.8,
+        "speed" : 5,
         "modifiers" : {
           "vertical" : {
-            "option" : {
+            "command" : {
               "type" : "auto"
             },
-            "command" : {
+            "control" : {
               "type" : "auto"
             },
             "shift" : {
               "type" : "auto"
             },
-            "control" : {
+            "option" : {
               "type" : "auto"
             }
           }
-        },
-        "reverse" : {
-          "vertical" : true
-        },
-        "speed" : 5
+        }
       },
       "if" : {
         "device" : {
-          "productID" : "0xc547",
-          "category" : "mouse",
           "productName" : "USB Receiver",
-          "vendorID" : "0x46d"
+          "productID" : "0xc547",
+          "vendorID" : "0x46d",
+          "category" : "mouse"
         }
-      },
-      "buttons" : {
-        "universalBackForward" : false
       },
       "pointer" : {
         "acceleration" : 1,
         "disableAcceleration" : true
+      },
+      "buttons" : {
+        "universalBackForward" : false
       }
     },
     {
       "if" : {
         "device" : {
-          "productName" : "JLab GO Charge",
-          "productID" : "0x2fc",
           "vendorID" : "0x145f",
-          "category" : "mouse"
+          "category" : "mouse",
+          "productID" : "0x2fc",
+          "productName" : "JLab GO Charge"
+        }
+      },
+      "pointer" : {
+        "speed" : 0.5
+      }
+    },
+    {
+      "if" : {
+        "device" : {
+          "category" : "mouse",
+          "productID" : "0xc077",
+          "productName" : "USB Optical Mouse",
+          "vendorID" : "0x46d"
         }
       },
       "pointer" : {
         "speed" : 0.5
       }
     }
-  ],
-  "$schema" : "https:\/\/schema.linearmouse.app\/0.9.5"
+  ]
 }
