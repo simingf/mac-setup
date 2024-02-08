@@ -21,6 +21,9 @@ fi
 # User configuration
 alias ta='cd ~/CS166HTA/dev-env/ && ./cs1660-run-docker'
 
+# OS alias
+alias os='ssh sfeng22@ssh.cs.brown.edu'
+
 # general aliases
 alias e='exit'
 alias f='open . && exit'
@@ -281,3 +284,5 @@ macup() {
     git push
 }
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
