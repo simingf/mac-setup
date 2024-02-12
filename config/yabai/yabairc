@@ -26,6 +26,7 @@ yabai -m rule --add app="^Calendar$" space=home
 yabai -m rule --add app="^SelfControl$" space=home
 
 yabai -m rule --add app="^Discord$" space=msg manage=off
+yabai -m rule --add app="^Slack$" space=msg manage=off
 yabai -m rule --add app="^WeChat$" space=msg manage=off
 yabai -m rule --add app="^WhatsApp$" space=msg manage=off
 yabai -m rule --add app="^Messages$" space=msg manage=off
