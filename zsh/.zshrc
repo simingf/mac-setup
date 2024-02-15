@@ -15,7 +15,7 @@ source $ZSH/oh-my-zsh.sh
 if [[ -n $SSH_CONNECTION ]]; then
     export EDITOR='vi'
 else
-    export EDITOR='hx'
+    export EDITOR='vim'
 fi
 
 # User configuration
@@ -61,10 +61,10 @@ alias rg='ranger'
 # config aliases
 alias rs="clear && source ~/.zshrc"
 alias ch="rm -f ~/.zsh_history && clear"
-alias zrc="hx ~/.zshrc"
-alias yrc="hx ~/.config/yabai/yabairc"
+alias zrc="vim ~/.zshrc"
+alias yrc="vim ~/.config/yabai/yabairc"
 alias yrs="yabai --restart-service"
-alias src="hx ~/.config/skhd/skhdrc"
+alias src="vim ~/.config/skhd/skhdrc"
 alias srs="skhd --restart-service"
 alias cf="builtin cd ~/.config && ls"
 alias ub='builtin cd ~/.config/ubersicht && ls'
@@ -173,14 +173,6 @@ k() {
     fi
 }
 
-h() {
-    if [[ "$@" == "" ]]; then
-        hx .    
-    else
-        hx "$@"
-    fi
-}
-
 # image magick function
 img() {
     magick "$1" "$2"
@@ -196,7 +188,7 @@ n() {
         # go to notes dir
         cd ~/Documents/Notes/
     elif [[ "$1" == "h" ]]; then
-        # search for notes that match query and edit all matches w helix
+        # search for notes that match query and edit all matches w vim
         shift
         IFS=$'\n'
         INPUT="$@"
@@ -206,17 +198,17 @@ n() {
         else
             for FILE in $FILES
             do
-                hx $FILE
+                vim $FILE
             done
         fi
         unset IFS
     elif [[ "$1" == "n" ]]; then
-        # make a new note and edit w helix
+        # make a new note and edit w vim
         shift
         INPUT="$@"
         FILE=~/Documents/Notes/"$INPUT".txt
         touch "$FILE"
-        hx "$FILE"
+        vim "$FILE"
     elif [[ "$1" == "rm" ]]; then
         # search for exact note name and remove it
         shift
@@ -249,8 +241,6 @@ alias mac='cd ~/Github/mac-setup/'
 
 # copy configs to mac-setup
 maccp() {
-    cp -r ~/.config/helix/* ~/Github/mac-setup/config/helix/
-    echo "helix config copied"
     cp -r ~/.config/kitty/* ~/Github/mac-setup/config/kitty/
     echo "kitty config copied"
     cp -r ~/.config/linearmouse/* ~/Github/mac-setup/config/linearmouse/
