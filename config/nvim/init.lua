@@ -65,7 +65,7 @@ sign({name = 'DiagnosticSignInfo', text = '»'})
 -- configure diagnostic options
 vim.diagnostic.config({
   -- Show diagnostic message using virtual text.
-  virtual_text = false,
+  virtual_text = true,
   -- Show a sign next to the line with a diagnostic.
   signs = true,
   -- Update diagnostics while editing in insert mode.
@@ -105,15 +105,17 @@ require("lazy").setup({
   {'nvim-lualine/lualine.nvim'},
   {'akinsho/bufferline.nvim'},
   {"lukas-reineke/indent-blankline.nvim"},
+  {'echasnovski/mini.cursorword'},
   -- editor utilities
   {'nvim-treesitter/nvim-treesitter'},
   {'nvim-treesitter/nvim-treesitter-textobjects'},
   {'echasnovski/mini.comment'},
   {'echasnovski/mini.surround'},
-  {'echasnovski/mini.bufremove'},
   -- file system
   {'kyazdani42/nvim-tree.lua'},
   {'nvim-telescope/telescope.nvim'},
+  {'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
+  {'echasnovski/mini.bufremove'},
   -- git
   {'tpope/vim-fugitive'},
   {'lewis6991/gitsigns.nvim'},
@@ -203,13 +205,9 @@ require('nvim-treesitter.configs').setup({
   },
 })
 
--- See :help MiniComment.config
+require('mini.cursorword').setup({})
 require('mini.comment').setup({})
-
--- See :help MiniSurround.config
 require('mini.surround').setup({})
-
--- See :help MiniBufremove.config
 require('mini.bufremove').setup({})
 vim.keymap.set('n', '<leader>bc', '<cmd>lua pcall(MiniBufremove.delete)<cr>')
 
