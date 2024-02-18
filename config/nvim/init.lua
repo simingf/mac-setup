@@ -35,14 +35,51 @@ vim.opt.termguicolors = true
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 -- copy
-vim.keymap.set({'n', 'x'}, '<leader>y', '"+y')
+vim.keymap.set({'n', 'x'}, 'gy', '"+y')
 -- paste
-vim.keymap.set({'n', 'x'}, '<leader>p', '"+p')
+vim.keymap.set({'n', 'x'}, 'gp', '"+p')
 -- prevent x or X from modifying the internal register
 vim.keymap.set({'n', 'x'}, 'x', '"_x')
 vim.keymap.set({'n', 'x'}, 'X', '"_d')
 -- select all text in current buffer
 vim.keymap.set('n', '<leader>a', ':keepjumps normal! ggVG<cr>')
+
+-- ========================================================================== --
+-- ==                           DIAGNOSTICS                                == --
+-- ========================================================================== --
+
+-- change diagnostic icons
+local sign = function(opts)
+  vim.fn.sign_define(opts.name, {
+    texthl = opts.name,
+    text = opts.text,
+    numhl = ''
+  })
+end
+
+sign({name = 'DiagnosticSignError', text = '✘'})
+sign({name = 'DiagnosticSignWarn', text = '▲'})
+sign({name = 'DiagnosticSignHint', text = '⚑'})
+sign({name = 'DiagnosticSignInfo', text = '»'})
+
+-- configure diagnostic options
+vim.diagnostic.config({
+  -- Show diagnostic message using virtual text.
+  virtual_text = false,
+  -- Show a sign next to the line with a diagnostic.
+  signs = true,
+  -- Update diagnostics while editing in insert mode.
+  update_in_insert = false,
+  -- Use an underline to show a diagnostic location.
+  underline = true,
+  -- Order diagnostics by severity.
+  severity_sort = true,
+  -- Show diagnostic messages in floating windows.
+  float = {
+    border = 'rounded',
+    source = 'always',
+  },
+})
 
 -- ========================================================================== --
 -- ==                               PLUGINS                                == --
@@ -63,7 +100,7 @@ require("lazy").setup({
   {'nvim-lua/plenary.nvim'},
   {'kyazdani42/nvim-web-devicons'},
   -- theme
-  {"ellisonleao/gruvbox.nvim"}, 
+  {"ellisonleao/gruvbox.nvim"},
   -- editor ui
   {'nvim-lualine/lualine.nvim'},
   {'akinsho/bufferline.nvim'},
@@ -71,13 +108,12 @@ require("lazy").setup({
   -- editor utilities
   {'nvim-treesitter/nvim-treesitter'},
   {'nvim-treesitter/nvim-treesitter-textobjects'},
-  {'numToStr/Comment.nvim'},
-  {'tpope/vim-surround'},
-  {'tpope/vim-repeat'},
+  {'echasnovski/mini.comment'},
+  {'echasnovski/mini.surround'},
+  {'echasnovski/mini.bufremove'},
   -- file system
   {'kyazdani42/nvim-tree.lua'},
   {'nvim-telescope/telescope.nvim'},
-  {'moll/vim-bbye'},
   -- git
   {'tpope/vim-fugitive'},
   {'lewis6991/gitsigns.nvim'},
@@ -88,8 +124,9 @@ require("lazy").setup({
   {'hrsh7th/nvim-cmp'},
   {'hrsh7th/cmp-buffer'},
   {'hrsh7th/cmp-path'},
-  {'saadparwaiz1/cmp_luasnip'},
   {'hrsh7th/cmp-nvim-lsp'},
+  -- snippets
+  {'saadparwaiz1/cmp_luasnip'},
   {'L3MON4D3/LuaSnip'},
   {'rafamadriz/friendly-snippets'},
 })
@@ -102,6 +139,7 @@ require("lazy").setup({
 vim.cmd.colorscheme('gruvbox')
 
 -- lualine (better status line at the bottom)
+-- See :help lualine.txt
 require('lualine').setup({
     options = {
         theme = 'gruvbox',
@@ -143,6 +181,7 @@ require('ibl').setup({
 })
 
 -- treesitter (creates syntax tree for various languages)
+-- See :help nvim-treesitter-modules
 require('nvim-treesitter.configs').setup({
   highlight = {
     enable = true,
@@ -164,8 +203,15 @@ require('nvim-treesitter.configs').setup({
   },
 })
 
--- comment using 'gc'
-require('Comment').setup({})
+-- See :help MiniComment.config
+require('mini.comment').setup({})
+
+-- See :help MiniSurround.config
+require('mini.surround').setup({})
+
+-- See :help MiniBufremove.config
+require('mini.bufremove').setup({})
+vim.keymap.set('n', '<leader>bc', '<cmd>lua pcall(MiniBufremove.delete)<cr>')
 
 -- nvim-tree (file explorer)
 require('nvim-tree').setup({
@@ -177,7 +223,6 @@ require('nvim-tree').setup({
 
     -- See :help nvim-tree.api
     local api = require('nvim-tree.api')
-   
     bufmap('J', api.node.open.edit, 'Expand folder or go to file')
     bufmap('K', api.node.navigate.parent_close, 'Close parent folder')
     bufmap('gh', api.tree.toggle_hidden_filter, 'Toggle hidden files')
@@ -187,6 +232,7 @@ require('nvim-tree').setup({
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
 
 -- telescope (search / filter files)
+-- See :help telescope.builtin
 -- search open files
 vim.keymap.set('n', '<leader><space>', '<cmd>Telescope buffers<cr>')
 -- search recently opened files
@@ -200,9 +246,6 @@ vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
 -- fzf for a pattern in the current file
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
 
--- vim-bbye (close buffer without closing window)
-vim.keymap.set('n', '<leader>cb', '<cmd>Bdelete<CR>')
-
 -- gitsigns
 require('gitsigns').setup({
   signs = {
@@ -214,15 +257,22 @@ require('gitsigns').setup({
   }
 })
 
--- lsp
+-- lsp (language server)
 require('mason').setup()
 require('mason-lspconfig').setup()
 
 local lspconfig = require('lspconfig')
-lspconfig.lua_ls.setup({})
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 lspconfig.lua_ls.setup({
   capabilities = lsp_capabilities,
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = {'vim'}
+      }
+    }
+  }
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -234,49 +284,48 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- Displays hover information about the symbol under the cursor
-    bufmap('n', '<leader>K', '<cmd>lua vim.lsp.buf.hover()<cr>')
+    bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
 
     -- Jump to the definition
-    bufmap('n', '<leader>gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
+    bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
 
     -- Jump to declaration
-    bufmap('n', '<leader>gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
+    bufmap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
 
     -- Lists all the implementations for the symbol under the cursor
-    bufmap('n', '<leader>gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
+    bufmap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
 
     -- Jumps to the definition of the type symbol
-    bufmap('n', '<leader>go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
+    bufmap('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
 
     -- Lists all the references 
-    bufmap('n', '<leader>gr', '<cmd>lua vim.lsp.buf.references()<cr>')
+    bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
 
     -- Displays a function's signature information
-    bufmap('n', '<leader>gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
+    bufmap('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
 
     -- Renames all references to the symbol under the cursor
-    bufmap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>')
+    bufmap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>')
 
     -- Selects a code action available at the current cursor position
-    bufmap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+    bufmap('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 
     -- Show diagnostics in a floating window
-    bufmap('n', '<leader>gl', '<cmd>lua vim.diagnostic.open_float()<cr>')
+    bufmap('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>')
 
     -- Move to the previous diagnostic
-    bufmap('n', '<leader>[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
+    bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
 
     -- Move to the next diagnostic
-    bufmap('n', '<leader>]d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+    bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
   end
 })
 
--- snippets
+-- load installed snippets
 require('luasnip.loaders.from_vscode').lazy_load()
 
 -- nvim-cmp (autocompletion)
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
-require('luasnip.loaders.from_vscode').lazy_load()
 local cmp = require('cmp')
 local luasnip = require('luasnip')
 local select_opts = {behavior = cmp.SelectBehavior.Select}
@@ -288,13 +337,9 @@ cmp.setup({
     end
   },
   sources = {
-    -- file paths
     {name = 'path'},
-    -- lsp responses
     {name = 'nvim_lsp', keyword_length = 1},
-    -- available snippets
     {name = 'luasnip', keyword_length = 2},
-    -- words found in current buffer
     {name = 'buffer', keyword_length = 3},
   },
   window = {
@@ -304,7 +349,6 @@ cmp.setup({
     fields = {'menu', 'abbr', 'kind'},
     format = function(entry, item)
       local menu_icon = {
-        -- symbols for where the completion suggestion came from
         nvim_lsp = 'λ',
         luasnip = '⋗',
         buffer = 'Ω',
@@ -317,34 +361,20 @@ cmp.setup({
   mapping = {
     ['<Up>'] = cmp.mapping.select_prev_item(select_opts),
     ['<Down>'] = cmp.mapping.select_next_item(select_opts),
-    -- scroll up
-    ['<C-p>'] = cmp.mapping.scroll_docs(-4),
-    -- scroll down
-    ['<C-n>'] = cmp.mapping.scroll_docs(4),
-    -- cancel completion
+
+    ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
+    ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
+
+    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+
     ['<C-e>'] = cmp.mapping.abort(),
-    -- confirm selection
     ['<C-y>'] = cmp.mapping.confirm({select = true}),
     ['<CR>'] = cmp.mapping.confirm({select = false}),
-    -- jump to the next placeholder in the snippet
-    ['<C-f>'] = cmp.mapping(function(fallback)
-      if luasnip.jumpable(1) then
-        luasnip.jump(1)
-      else
-        fallback()
-      end
-    end, {'i', 's'}),
-    -- jump to the previous placeholder in the snippet
-    ['<C-b>'] = cmp.mapping(function(fallback)
-      if luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, {'i', 's'}),
-    -- if empty line, insert tab. else open completion menu. if already open, move to next item.
+
     ['<Tab>'] = cmp.mapping(function(fallback)
       local col = vim.fn.col('.') - 1
+
       if cmp.visible() then
         cmp.select_next_item(select_opts)
       elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
@@ -353,7 +383,7 @@ cmp.setup({
         cmp.complete()
       end
     end, {'i', 's'}),
-    -- if completion menu visible, move to prev item
+
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item(select_opts)
@@ -364,45 +394,3 @@ cmp.setup({
   },
 })
 
--- diagnostic config
--- change diagnostic icons
-local sign = function(opts)
-  vim.fn.sign_define(opts.name, {
-    texthl = opts.name,
-    text = opts.text,
-    numhl = ''
-  })
-end
-
-sign({name = 'DiagnosticSignError', text = '✘'})
-sign({name = 'DiagnosticSignWarn', text = '▲'})
-sign({name = 'DiagnosticSignHint', text = '⚑'})
-sign({name = 'DiagnosticSignInfo', text = '»'})
-
-vim.diagnostic.config({
-  -- Show diagnostic message using virtual text.
-  virtual_text = false,
-  -- Show a sign next to the line with a diagnostic.
-  signs = true,
-  -- Update diagnostics while editing in insert mode.
-  update_in_insert = false,
-  -- Use an underline to show a diagnostic location.
-  underline = true,
-  -- Order diagnostics by severity.
-  severity_sort = true,
-  -- Show diagnostic messages in floating windows.
-  float = {
-    border = 'rounded',
-    source = 'always',
-  },
-})
-
--- rounded borders for floating windows
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-  vim.lsp.handlers.hover,
-  {border = 'rounded'}
-)
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-  vim.lsp.handlers.signature_help,
-  {border = 'rounded'}
-)
