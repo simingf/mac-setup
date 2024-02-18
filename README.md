@@ -8,6 +8,7 @@ cbonsai
 cmake
 cmatrix
 cowsay
+curl
 fd
 ffmpeg
 figlet
@@ -17,18 +18,19 @@ git
 git-lfs
 graphviz
 grep
-helix
 imagemagick
 jesseduffield/lazygit/lazygit
+jq
 koekeishiya/formulae/skhd
 koekeishiya/formulae/yabai
 lolcat
 moon-buggy
 neofetch
+neovim
 node
-php
 ranger
 rig
+ripgrep
 sl
 tldr
 tree
@@ -41,6 +43,7 @@ zsh
 ## Homebrew Casks
 appcleaner
 arc
+betterdiscord-installer
 burp-suite
 discord
 docker
@@ -59,6 +62,7 @@ miniconda
 notion
 parsec
 qbittorrent
+slack
 spotify
 steam
 the-unarchiver
