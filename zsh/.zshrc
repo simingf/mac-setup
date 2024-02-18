@@ -13,10 +13,11 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR='vi'
-else
     export EDITOR='vim'
+else
+    export EDITOR='nvim'
 fi
+alias v='nvim'
 
 # User configuration
 alias ta='cd ~/CS166HTA/dev-env/ && ./cs1660-run-docker'
@@ -38,9 +39,12 @@ alias css='rm -f ~/Screenshots/* && echo "screenshots cleared"'
 alias bup='brew update && brew autoremove && brew cleanup && brew upgrade'
 # lists global node modules
 alias npmg='npm list -g --depth 0'
+
 # call this function when yabai updates
-alias yup='echo "$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d " " -f 1) $(which yabai) --load-sa" &&
-echo && echo "sudo visudo -f /private/etc/sudoers.d/yabai"'
+yup() {
+    TEXT="$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d " " -f 1) $(which yabai) --load-sa"
+    echo $TEXT | sudo tee /private/etc/sudoers.d/yabai
+}
 
 # directory aliases
 alias ls='ls -AG'
@@ -61,10 +65,10 @@ alias rg='ranger'
 # config aliases
 alias rs="clear && source ~/.zshrc"
 alias ch="rm -f ~/.zsh_history && clear"
-alias zrc="vim ~/.zshrc"
-alias yrc="vim ~/.config/yabai/yabairc"
+alias zrc="nvim ~/.zshrc"
+alias yrc="nvim ~/.config/yabai/yabairc"
 alias yrs="yabai --restart-service"
-alias src="vim ~/.config/skhd/skhdrc"
+alias src="nvim ~/.config/skhd/skhdrc"
 alias srs="skhd --restart-service"
 alias cf="builtin cd ~/.config && ls"
 alias ub='builtin cd ~/.config/ubersicht && ls'
@@ -188,7 +192,7 @@ n() {
         # go to notes dir
         cd ~/Documents/Notes/
     elif [[ "$1" == "h" ]]; then
-        # search for notes that match query and edit all matches w vim
+        # search for notes that match query and edit all matches w nvim
         shift
         IFS=$'\n'
         INPUT="$@"
@@ -198,17 +202,17 @@ n() {
         else
             for FILE in $FILES
             do
-                vim $FILE
+                nvim $FILE
             done
         fi
         unset IFS
     elif [[ "$1" == "n" ]]; then
-        # make a new note and edit w vim
+        # make a new note and edit w nvim
         shift
         INPUT="$@"
         FILE=~/Documents/Notes/"$INPUT".txt
         touch "$FILE"
-        vim "$FILE"
+        nvim "$FILE"
     elif [[ "$1" == "rm" ]]; then
         # search for exact note name and remove it
         shift
@@ -241,6 +245,8 @@ alias mac='cd ~/Github/mac-setup/'
 
 # copy configs to mac-setup
 maccp() {
+    cp -r ~/.config/nvim/* ~/Github/mac-setup/config/nvim/
+    echo "nvim config copied"
     cp -r ~/.config/kitty/* ~/Github/mac-setup/config/kitty/
     echo "kitty config copied"
     cp -r ~/.config/linearmouse/* ~/Github/mac-setup/config/linearmouse/
