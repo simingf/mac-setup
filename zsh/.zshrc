@@ -66,6 +66,7 @@ alias rg='ranger'
 alias rs="clear && source ~/.zshrc"
 alias ch="rm -f ~/.zsh_history && clear"
 alias zrc="nvim ~/.zshrc"
+alias nrc="nvim ~/.config/nvim/init.lua"
 alias yrc="nvim ~/.config/yabai/yabairc"
 alias yrs="yabai --restart-service"
 alias src="nvim ~/.config/skhd/skhdrc"
