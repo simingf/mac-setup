@@ -26,6 +26,9 @@ vim.opt.expandtab = true
 vim.opt.showmode = false
 -- enable hexademical colors instead of only 256 colors
 vim.opt.termguicolors = true
+-- disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- ========================================================================== --
 -- ==                           KEY BINDINGS                               == --
@@ -110,7 +113,7 @@ require("lazy").setup({
   {'nvim-treesitter/nvim-treesitter'},
   {'nvim-treesitter/nvim-treesitter-textobjects'},
   {'echasnovski/mini.comment'},
-  {'echasnovski/mini.surround'},
+  {'tpope/vim-surround'},
   -- file system
   {'kyazdani42/nvim-tree.lua'},
   {'nvim-telescope/telescope.nvim'},
@@ -182,6 +185,9 @@ require('ibl').setup({
     }
 })
 
+-- underlines all words that are the same as word under cursor
+require('mini.cursorword').setup({})
+
 -- treesitter (creates syntax tree for various languages)
 -- See :help nvim-treesitter-modules
 require('nvim-treesitter.configs').setup({
@@ -201,18 +207,18 @@ require('nvim-treesitter.configs').setup({
     },
   },
   ensure_installed = {
-    'python', 'csv', 'java', 'c', 'cpp', 'javascript', 'typescript', 'html', 'css', 'json', 'bash', 'lua', 'latex'
+    'vim', 'vimdoc', 'lua', 'python', 'java', 'c', 'cpp', 'javascript', 'typescript', 'json', 'bash', 'latex'
   },
 })
 
-require('mini.cursorword').setup({})
+-- use gcc to comment a line
 require('mini.comment').setup({})
-require('mini.surround').setup({})
-require('mini.bufremove').setup({})
-vim.keymap.set('n', '<leader>bc', '<cmd>lua pcall(MiniBufremove.delete)<cr>')
 
 -- nvim-tree (file explorer)
 require('nvim-tree').setup({
+  view = {
+    width = 20,
+  },
   hijack_cursor = false,
   on_attach = function(bufnr)
     local bufmap = function(lhs, rhs, desc)
@@ -221,8 +227,8 @@ require('nvim-tree').setup({
 
     -- See :help nvim-tree.api
     local api = require('nvim-tree.api')
-    bufmap('J', api.node.open.edit, 'Expand folder or go to file')
-    bufmap('K', api.node.navigate.parent_close, 'Close parent folder')
+    bufmap('h', api.node.open.edit, 'Expand folder or go to file')
+    bufmap('l', api.node.navigate.parent_close, 'Close parent folder')
     bufmap('gh', api.tree.toggle_hidden_filter, 'Toggle hidden files')
   end
 })
@@ -243,6 +249,10 @@ vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
 vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
 -- fzf for a pattern in the current file
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
+
+-- clear buffer without deleting window
+require('mini.bufremove').setup({})
+vim.keymap.set('n', '<leader>bc', '<cmd>lua pcall(MiniBufremove.delete)<cr>')
 
 -- gitsigns
 require('gitsigns').setup({
