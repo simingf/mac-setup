@@ -46,6 +46,8 @@ vim.keymap.set({'n', 'x'}, 'x', '"_x')
 vim.keymap.set({'n', 'x'}, 'X', '"_d')
 -- select all text in current buffer
 vim.keymap.set('n', '<leader>a', ':keepjumps normal! ggVG<cr>')
+-- swap windows
+vim.api.nvim_set_keymap('n', '<Leader>w', '<C-w>', {noremap = true, silent = true})
 
 -- ========================================================================== --
 -- ==                           DIAGNOSTICS                                == --
@@ -107,6 +109,7 @@ require("lazy").setup({
   -- editor ui
   {'nvim-lualine/lualine.nvim'},
   {'akinsho/bufferline.nvim'},
+  {'echasnovski/mini.bufremove'},
   {"lukas-reineke/indent-blankline.nvim"},
   {'echasnovski/mini.cursorword'},
   -- editor utilities
@@ -118,10 +121,6 @@ require("lazy").setup({
   {'kyazdani42/nvim-tree.lua'},
   {'nvim-telescope/telescope.nvim'},
   {'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
-  {'echasnovski/mini.bufremove'},
-  -- git
-  {'tpope/vim-fugitive'},
-  {'lewis6991/gitsigns.nvim'},
   -- lsp & cmp
   {'williamboman/mason.nvim'},
   {'williamboman/mason-lspconfig.nvim'},
@@ -130,14 +129,14 @@ require("lazy").setup({
   {'hrsh7th/cmp-buffer'},
   {'hrsh7th/cmp-path'},
   {'hrsh7th/cmp-nvim-lsp'},
-  -- snippets
+  -- snippet
   {'saadparwaiz1/cmp_luasnip'},
   {'L3MON4D3/LuaSnip'},
   {'rafamadriz/friendly-snippets'},
 })
 
 -- ========================================================================== --
--- ==                         PLUGIN CONFIGURATION                         == --
+-- ==                         CONFIGURATION                                == --
 -- ========================================================================== --
 
 -- gruvbox (theme)
@@ -174,11 +173,19 @@ require('bufferline').setup({
   }
 })
 
+-- swap tabs
+vim.keymap.set('n', '<leader>bh', ':bprev<cr>')
+vim.keymap.set('n', '<leader>bl', ':bnext<cr>')
+
+-- close buffer without closing window
+require('mini.bufremove').setup({})
+vim.keymap.set('n', '<leader>bc', '<cmd>lua pcall(MiniBufremove.delete)<cr>')
+
 -- indent guides
 require('ibl').setup({
     enabled = true,
     scope = {
-        enabled = true
+       enabled = true
     },
     indent = {
         char = '▏'
@@ -217,7 +224,7 @@ require('mini.comment').setup({})
 -- nvim-tree (file explorer)
 require('nvim-tree').setup({
   view = {
-    width = 20,
+    width = 30,
   },
   hijack_cursor = false,
   on_attach = function(bufnr)
@@ -227,8 +234,9 @@ require('nvim-tree').setup({
 
     -- See :help nvim-tree.api
     local api = require('nvim-tree.api')
-    bufmap('h', api.node.open.edit, 'Expand folder or go to file')
-    bufmap('l', api.node.navigate.parent_close, 'Close parent folder')
+    bufmap('<cr>', api.node.open.edit, 'Expand folder or go to file')
+    bufmap('cd', api.tree.change_root_to_node, 'Set current directory as root')
+    bufmap('..', api.node.navigate.parent, 'Move to parent directory')
     bufmap('gh', api.tree.toggle_hidden_filter, 'Toggle hidden files')
   end
 })
@@ -249,21 +257,6 @@ vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
 vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
 -- fzf for a pattern in the current file
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
-
--- clear buffer without deleting window
-require('mini.bufremove').setup({})
-vim.keymap.set('n', '<leader>bc', '<cmd>lua pcall(MiniBufremove.delete)<cr>')
-
--- gitsigns
-require('gitsigns').setup({
-  signs = {
-    add = {text = '▎'},
-    change = {text = '▎'},
-    delete = {text = '➤'},
-    topdelete = {text = '➤'},
-    changedelete = {text = '▎'},
-  }
-})
 
 -- lsp (language server)
 require('mason').setup()
@@ -313,10 +306,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
     bufmap('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
 
     -- Renames all references to the symbol under the cursor
-    bufmap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>')
+    bufmap('n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>')
 
     -- Selects a code action available at the current cursor position
-    bufmap('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+    bufmap('n', 'gc', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 
     -- Show diagnostics in a floating window
     bufmap('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>')
@@ -345,10 +338,10 @@ cmp.setup({
     end
   },
   sources = {
-    {name = 'path'},
     {name = 'nvim_lsp', keyword_length = 1},
     {name = 'luasnip', keyword_length = 2},
     {name = 'buffer', keyword_length = 3},
+    {name = 'path'},
   },
   window = {
     documentation = cmp.config.window.bordered()
@@ -357,10 +350,10 @@ cmp.setup({
     fields = {'menu', 'abbr', 'kind'},
     format = function(entry, item)
       local menu_icon = {
-        nvim_lsp = 'λ',
-        luasnip = '⋗',
-        buffer = 'Ω',
-        path = '🖫',
+        nvim_lsp = 'L',
+        luasnip = 'S',
+        buffer = 'B',
+        path = 'P',
       }
       item.menu = menu_icon[entry.source.name]
       return item
