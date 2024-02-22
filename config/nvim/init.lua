@@ -64,10 +64,10 @@ local sign = function(opts)
   })
 end
 
-sign({ name = 'DiagnosticSignError', text = '✘' })
-sign({ name = 'DiagnosticSignWarn', text = '▲' })
-sign({ name = 'DiagnosticSignHint', text = '⚑' })
-sign({ name = 'DiagnosticSignInfo', text = '»' })
+sign({ name = 'DiagnosticSignError', text = '' })
+sign({ name = 'DiagnosticSignWarn', text = '' })
+sign({ name = 'DiagnosticSignHint', text = '' })
+sign({ name = 'DiagnosticSignInfo', text = '' })
 
 -- configure diagnostic options
 vim.diagnostic.config({
@@ -122,7 +122,7 @@ require("lazy").setup({
   -- file system
   { 'kyazdani42/nvim-tree.lua' },
   { 'nvim-telescope/telescope.nvim' },
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  { 'nvim-telescope/telescope-fzf-native.nvim',   build = 'make' },
   -- mason
   { 'williamboman/mason.nvim' },
   { 'williamboman/mason-lspconfig.nvim' },
@@ -134,13 +134,16 @@ require("lazy").setup({
   { 'stevearc/conform.nvim' },
   -- cmp (autocompletion)
   { 'hrsh7th/nvim-cmp' },
+  { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
   { 'hrsh7th/cmp-path' },
-  { 'hrsh7th/cmp-nvim-lsp' },
   -- snippets
-  { 'saadparwaiz1/cmp_luasnip' },
   { 'L3MON4D3/LuaSnip' },
+  { 'saadparwaiz1/cmp_luasnip' },
   { 'rafamadriz/friendly-snippets' },
+  -- copilot
+  { 'zbirenbaum/copilot.lua' },
+  { 'zbirenbaum/copilot-cmp' },
 })
 
 -- ========================================================================== --
@@ -161,7 +164,7 @@ require('lualine').setup({
     icons_enabled = true,
     section_separators = '',
     component_separators = '|'
-  }
+  },
 })
 
 -- bufferline (shows open files as tabs at top)
@@ -329,13 +332,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     bufmap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 
     -- Show diagnostics in a floating window
-    bufmap('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<cr>')
+    bufmap('n', '<leader>dd', '<cmd>lua vim.diagnostic.open_float()<cr>')
 
     -- Move to the previous diagnostic
-    bufmap('n', 'pd', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
+    bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
 
     -- Move to the next diagnostic
-    bufmap('n', 'nd', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+    bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
   end
 })
 
@@ -356,7 +359,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePre" }, {
 require("conform").setup({
   formatters_by_ft = {
     python = { "isort", "black" },
-    cpp = { "clang-format" },
     javascript = { "prettierd" },
     typescript = { "prettierd" },
     javascriptreact = { "prettierd" },
@@ -376,10 +378,17 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 -- nvim-cmp (autocompletion)
+local luasnip = require('luasnip')
 require('luasnip.loaders.from_vscode').lazy_load()
+
+require("copilot").setup({
+  suggestion = { enabled = false },
+  panel = { enabled = false },
+})
+require("copilot_cmp").setup()
+
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 local cmp = require('cmp')
-local luasnip = require('luasnip')
 local select_opts = { behavior = cmp.SelectBehavior.Select }
 
 cmp.setup({
@@ -389,6 +398,7 @@ cmp.setup({
     end
   },
   sources = {
+    { name = 'copilot',  keyword_length = 0 },
     { name = 'nvim_lsp', keyword_length = 1 },
     { name = 'luasnip',  keyword_length = 2 },
     { name = 'buffer',   keyword_length = 3 },
@@ -401,10 +411,11 @@ cmp.setup({
     fields = { 'menu', 'abbr', 'kind' },
     format = function(entry, item)
       local menu_icon = {
-        nvim_lsp = 'L',
-        luasnip = 'S',
-        buffer = 'B',
-        path = 'P',
+        copilot = 'GPT',
+        nvim_lsp = 'LSP',
+        luasnip = 'SNIP',
+        buffer = 'BUF',
+        path = 'PATH',
       }
       item.menu = menu_icon[entry.source.name]
       return item
@@ -414,34 +425,35 @@ cmp.setup({
     ['<Up>'] = cmp.mapping.select_prev_item(select_opts),
     ['<Down>'] = cmp.mapping.select_next_item(select_opts),
 
-    ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
-    ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
+    -- ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    -- ['<C-d>'] = cmp.mapping.scroll_docs(4),
 
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-
+    ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-    ['<CR>'] = cmp.mapping.confirm({ select = false }),
+    ['<cr>'] = cmp.mapping.confirm({ select = true }),
 
     ['<Tab>'] = cmp.mapping(function(fallback)
-      local col = vim.fn.col('.') - 1
-
       if cmp.visible() then
-        cmp.select_next_item(select_opts)
-      elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        fallback()
+      cmp.select_next_item(select_opts)
       else
-        cmp.complete()
+      fallback()
       end
     end, { 'i', 's' }),
-
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.select_prev_item(select_opts)
+      cmp.select_prev_item(select_opts)
       else
-        fallback()
+      fallback()
       end
     end, { 'i', 's' }),
   },
 })
+
+cmp.event:on("menu_opened", function()
+  vim.b.copilot_suggestion_hidden = true
+end)
+
+cmp.event:on("menu_closed", function()
+  vim.b.copilot_suggestion_hidden = false
+end)
+
