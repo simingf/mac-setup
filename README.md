@@ -1,6 +1,7 @@
 # Mac Setup
 
 ## Homebrew Formulae
+
 ack
 aria2
 btop
@@ -41,6 +42,7 @@ yt-dlp
 zsh
 
 ## Homebrew Casks
+
 appcleaner
 arc
 betterdiscord-installer
@@ -73,18 +75,22 @@ whatsapp
 wireshark
 zoom
 
-## Command Line Tools
+## Install Via Command Line
+
+oh-my-zsh
 ani-cli
 mov-cli
 
-## App Store Download
+## Download Via App Store
+
 Amphetamine
 Aware
 Microsoft To Do
 Pure Paste
 Xcode
 
-## Online Download
+## Download Online
+
 BaiduNetdisk
 Bit Slicer
 Calibre
@@ -95,6 +101,7 @@ SelfControl
 Stacher
 
 ## xclient.info / 52mac.com
+
 Alfred 5
 Gestimer
 iA Writer
@@ -104,6 +111,7 @@ Octagon
 Yoink
 
 ## Alfred Workflows
+
 Amazon Suggest
 fzf-alfred-workflow
 Google Scholar Suggest
