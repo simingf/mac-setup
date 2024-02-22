@@ -117,6 +117,7 @@ require("lazy").setup({
   { 'echasnovski/mini.bufremove' },
   { "lukas-reineke/indent-blankline.nvim" },
   { 'echasnovski/mini.cursorword' },
+  { 'karb94/neoscroll.nvim' },
   -- editor utilities
   { 'nvim-treesitter/nvim-treesitter' },
   { 'nvim-treesitter/nvim-treesitter-textobjects' },
@@ -212,6 +213,9 @@ require('ibl').setup({
 
 -- underlines all words that are the same as word under cursor
 require('mini.cursorword').setup({})
+
+-- smooth scrolling
+require('neoscroll').setup({})
 
 -- treesitter (creates syntax tree for various languages)
 -- See :help nvim-treesitter-modules
