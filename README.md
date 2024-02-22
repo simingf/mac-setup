@@ -78,6 +78,7 @@ zoom
 ## Install Via Command Line
 
 oh-my-zsh
+powerlevel10k
 ani-cli
 mov-cli
 
