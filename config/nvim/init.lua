@@ -4,6 +4,9 @@
 
 -- enable line numbers
 vim.opt.number = true
+vim.opt.relativenumber = true
+-- highlight current line
+vim.opt.cursorline = true
 -- enable mouse for all modes
 vim.opt.mouse = 'a'
 -- include both lower and upper case for search
@@ -107,7 +110,7 @@ require("lazy").setup({
   { 'nvim-lua/plenary.nvim' },
   { 'kyazdani42/nvim-web-devicons' },
   -- theme
-  { "ellisonleao/gruvbox.nvim" },
+  { "eddyekofo94/gruvbox-flat.nvim" },
   -- editor ui
   { 'nvim-lualine/lualine.nvim' },
   { 'akinsho/bufferline.nvim' },
@@ -151,16 +154,17 @@ require("lazy").setup({
 -- ========================================================================== --
 
 -- gruvbox (theme)
-require("gruvbox").setup({
-  transparent_mode = true,
-})
-vim.cmd.colorscheme('gruvbox')
+vim.g.gruvbox_flat_style = "hard"
+vim.g.gruvbox_transparent = true
+vim.g.gruvbox_dark_sidebar = false
+vim.g.gruvbox_dark_float = false
+vim.cmd.colorscheme('gruvbox-flat')
 
 -- lualine (better status line at the bottom)
 -- See :help lualine.txt
 require('lualine').setup({
   options = {
-    theme = 'gruvbox',
+    theme = 'gruvbox-flat',
     icons_enabled = true,
     section_separators = '',
     component_separators = '|'
@@ -238,7 +242,7 @@ require('mini.comment').setup({})
 -- nvim-tree (file explorer)
 require('nvim-tree').setup({
   view = {
-    width = 30,
+    width = 25,
   },
   hijack_cursor = false,
   on_attach = function(bufnr)
