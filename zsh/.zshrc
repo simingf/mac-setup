@@ -54,16 +54,16 @@ yup() {
 
 # directory aliases
 alias ls='ls -AG'
-alias ..='cd ..'
-alias app='builtin cd /Applications/ && ls'
-alias doc='builtin cd ~/Documents/ && ls'
-alias dow='builtin cd ~/Downloads/ && ls'
-alias des='builtin cd ~/Desktop/ && ls'
-alias ss='builtin cd ~/Screenshots/ && ls'
-alias hub='builtin cd ~/Github/ && ls'
-alias lab='builtin cd ~/Gitlab/ && ls'
-alias euler='builtin cd ~/euler/ && ls'
-alias dp='builtin cd ~/atcoder-dp/ && ls'
+alias ..='builtin cd .. && clear && ls'
+alias app='builtin cd /Applications/ && clear && ls'
+alias doc='builtin cd ~/Documents/ && clear && ls'
+alias dow='builtin cd ~/Downloads/ && clear && ls'
+alias des='builtin cd ~/Desktop/ && clear && ls'
+alias ss='builtin cd ~/Screenshots/ && clear && ls'
+alias hub='builtin cd ~/Github/ && clear && ls'
+alias lab='builtin cd ~/Gitlab/ && clear && ls'
+alias euler='builtin cd ~/euler/ && clear && ls'
+alias dp='builtin cd ~/atcoder-dp/ && clear && ls'
 
 # app aliases
 alias rg='ranger'
@@ -97,18 +97,18 @@ zle -N accept-line
 cd() {
     # if no DIR given, go home
     if [[ "$@" == "" ]]; then
-        builtin cd $HOME && ls
+        builtin cd $HOME && clear && ls
     # if the path only contains '.' and '/' (moving up dir tree)
     elif [[ "$@" =~ ^[./-]+$ ]]; then
-        builtin cd "$@" && ls
+        builtin cd "$@" && clear && ls
     # if the path contains at least one '/' (i tabbed it)
     elif [[ "$@" == *"/"* ]]; then
-        builtin cd "$@" && ls
+        builtin cd "$@" && clear && ls
     else
         # try to find exact match for dirname first
         EXACT=$(find . -maxdepth 1 -type d -iname "$@" -print -quit)
         if [[ $EXACT != "" ]]; then
-            builtin cd "${EXACT}" && ls
+            builtin cd "${EXACT}" && clear && ls
         else
             # find all dirnames that contain search string
             DIRS=$(find . -maxdepth 1 -type d -iname "*$@*" -print -quit)
@@ -117,7 +117,7 @@ cd() {
             else
                 # cd into first match
                 DIR=${DIRS%%*"\n"}
-                builtin cd "${DIR}" && ls
+                builtin cd "${DIR}" && clear && ls
             fi
         fi
     fi
