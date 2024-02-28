@@ -128,7 +128,6 @@ require("lazy").setup({
   { 'kyazdani42/nvim-tree.lua' },
   { 'nvim-telescope/telescope.nvim' },
   { 'nvim-telescope/telescope-fzf-native.nvim',   build = 'make' },
-  { 'IllustratedMan-code/telescope-conda.nvim' },
   -- mason
   { 'williamboman/mason.nvim' },
   { 'williamboman/mason-lspconfig.nvim' },
@@ -301,14 +300,6 @@ vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
 vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
 -- fzf for a pattern in the current file
 vim.keymap.set('n', '<leader><space>', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
--- select conda env
-vim.keymap.set('n', '<leader>ce', '<cmd>Telescope conda<cr>')
-
-require('telescope').setup {
-	extensions = {
-		conda = {anaconda_path = "/opt/homebrew/Caskroom/miniconda/base"}
-  }
-}
 
 -- lsp (language server)
 require('mason').setup()
@@ -423,10 +414,10 @@ cmp.setup({
     end
   },
   sources = {
-    { name = 'copilot',  keyword_length = 0 },
+    { name = 'copilot',  keyword_length = 1 },
     { name = 'nvim_lsp', keyword_length = 1 },
     { name = 'luasnip',  keyword_length = 2 },
-    { name = 'buffer',   keyword_length = 3 },
+    { name = 'buffer',   keyword_length = 2 },
     { name = 'path' },
   },
   window = {
@@ -482,3 +473,19 @@ end)
 cmp.event:on("menu_closed", function()
   vim.b.copilot_suggestion_hidden = false
 end)
+
+-- custom python provider
+local function isempty(s)
+		return s == nil or s == ""
+	end
+local function use_if_defined(val, fallback)
+  return val ~= nil and val or fallback
+end
+local conda_prefix = os.getenv("CONDA_PREFIX")
+if not isempty(conda_prefix) then
+  vim.g.python_host_prog = use_if_defined(vim.g.python_host_prog, conda_prefix .. "/bin/python")
+  vim.g.python3_host_prog = use_if_defined(vim.g.python3_host_prog, conda_prefix .. "/bin/python")
+else
+  vim.g.python_host_prog = use_if_defined(vim.g.python_host_prog, "python")
+  vim.g.python3_host_prog = use_if_defined(vim.g.python3_host_prog, "python3")
+end
