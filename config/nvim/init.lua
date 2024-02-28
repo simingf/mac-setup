@@ -6,7 +6,7 @@
 vim.opt.number = true
 vim.opt.relativenumber = true
 -- highlight current line
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 -- enable mouse for all modes
 vim.opt.mouse = 'a'
 -- include both lower and upper case for search
@@ -110,7 +110,8 @@ require("lazy").setup({
   { 'nvim-lua/plenary.nvim' },
   { 'kyazdani42/nvim-web-devicons' },
   -- theme
-  { "eddyekofo94/gruvbox-flat.nvim" },
+  -- { 'ellisonleao/gruvbox.nvim' },
+  { "catppuccin/nvim" },
   -- editor ui
   { 'nvim-lualine/lualine.nvim' },
   { 'akinsho/bufferline.nvim' },
@@ -127,13 +128,12 @@ require("lazy").setup({
   { 'kyazdani42/nvim-tree.lua' },
   { 'nvim-telescope/telescope.nvim' },
   { 'nvim-telescope/telescope-fzf-native.nvim',   build = 'make' },
+  { 'IllustratedMan-code/telescope-conda.nvim' },
   -- mason
   { 'williamboman/mason.nvim' },
   { 'williamboman/mason-lspconfig.nvim' },
   -- lsp
   { 'neovim/nvim-lspconfig' },
-  -- linter
-  { 'mfussenegger/nvim-lint' },
   -- formatter
   { 'stevearc/conform.nvim' },
   -- cmp (autocompletion)
@@ -154,18 +154,39 @@ require("lazy").setup({
 -- ==                         CONFIGURATION                                == --
 -- ========================================================================== --
 
--- gruvbox (theme)
-vim.g.gruvbox_flat_style = "hard"
-vim.g.gruvbox_transparent = true
-vim.g.gruvbox_dark_sidebar = false
-vim.g.gruvbox_dark_float = false
-vim.cmd.colorscheme('gruvbox-flat')
+-- gruvbox setup
+-- vim.o.background = "dark"
+-- require("gruvbox").setup({
+--   contrast = "hard", -- can be "hard", "soft" or empty string
+--   transparent_mode = true,
+-- })
+-- vim.cmd("colorscheme gruvbox")
+
+-- catppuccin setup
+require("catppuccin").setup({
+    flavour = "mocha", -- latte, frappe, macchiato, mocha
+    transparent_background = true, -- disables setting the background color.
+    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+    integrations = {
+        cmp = true,
+        gitsigns = false,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = {
+            enabled = true,
+            indentscope_color = "",
+        },
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+    },
+})
+vim.cmd.colorscheme "catppuccin"
 
 -- lualine (better status line at the bottom)
 -- See :help lualine.txt
 require('lualine').setup({
   options = {
-    theme = 'gruvbox-flat',
+    theme = 'catppuccin',
     icons_enabled = true,
     section_separators = '',
     component_separators = '|'
@@ -262,6 +283,7 @@ require('nvim-tree').setup({
     bufmap('hh', api.tree.toggle_hidden_filter, 'Toggle hidden files')
   end
 })
+vim.cmd[[hi NvimTreeNormal guibg=NONE ctermbg=NONE]]
 
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
 
@@ -279,6 +301,14 @@ vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
 vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
 -- fzf for a pattern in the current file
 vim.keymap.set('n', '<leader><space>', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
+-- select conda env
+vim.keymap.set('n', '<leader>ce', '<cmd>Telescope conda<cr>')
+
+require('telescope').setup {
+	extensions = {
+		conda = {anaconda_path = "/opt/homebrew/Caskroom/miniconda/base"}
+  }
+}
 
 -- lsp (language server)
 require('mason').setup()
@@ -348,19 +378,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Move to the next diagnostic
     bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
   end
-})
-
--- linter setup
-require('lint').linters_by_ft = {
-  python = { 'pylint' },
-  cpp = { 'cpplint' },
-}
-
--- lint on file open and save
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePre" }, {
-  callback = function()
-    require("lint").try_lint()
-  end,
 })
 
 -- formatter setup
