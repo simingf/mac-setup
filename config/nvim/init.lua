@@ -113,12 +113,12 @@ require("lazy").setup({
   -- { 'ellisonleao/gruvbox.nvim' },
   { "catppuccin/nvim" },
   -- editor ui
+  { 'declancm/cinnamon.nvim' },
   { 'nvim-lualine/lualine.nvim' },
   { 'akinsho/bufferline.nvim' },
   { 'echasnovski/mini.bufremove' },
   { "lukas-reineke/indent-blankline.nvim" },
   { 'echasnovski/mini.cursorword' },
-  { 'karb94/neoscroll.nvim' },
   -- editor utilities
   { 'nvim-treesitter/nvim-treesitter' },
   { 'nvim-treesitter/nvim-treesitter-textobjects' },
@@ -181,6 +181,16 @@ require("catppuccin").setup({
 })
 vim.cmd.colorscheme "catppuccin"
 
+require('cinnamon').setup {
+  default_keymaps = true,
+  extra_keymaps = true,
+  extended_keymaps = true,
+  override_keymaps = true,
+  always_scroll = true,
+  max_length = 500,
+  scroll_limit = -1,
+}
+
 -- lualine (better status line at the bottom)
 -- See :help lualine.txt
 require('lualine').setup({
@@ -233,9 +243,6 @@ require('ibl').setup({
 
 -- underlines all words that are the same as word under cursor
 require('mini.cursorword').setup({})
-
--- smooth scrolling
-require('neoscroll').setup({})
 
 -- treesitter (creates syntax tree for various languages)
 -- See :help nvim-treesitter-modules
