@@ -5,7 +5,6 @@
 ack
 aria2
 arp-scan
-btop
 cbonsai
 cmake
 cmatrix
@@ -29,9 +28,9 @@ lolcat
 lua
 moon-buggy
 neofetch
+neovim
 node
 openjdk
-python@3.11
 rig
 ripgrep
 sl
@@ -65,7 +64,6 @@ microsoft-powerpoint
 microsoft-word
 minecraft
 miniconda
-neovide
 notion
 parsec
 qbittorrent
