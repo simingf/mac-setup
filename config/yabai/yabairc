@@ -36,6 +36,7 @@ yabai -m rule --add app="^zoom.us$" space=msg manage=off
 yabai -m rule --add app="^Arc$" space=web
 
 yabai -m rule --add app="^Code$" space=work1
+yabai -m rule --add app="^Neovide$" space=work1
 yabai -m rule --add app="^Qt Creator$" space=work1
 
 yabai -m rule --add app="^Docker Desktop$" space=work2
