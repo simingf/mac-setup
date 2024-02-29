@@ -187,7 +187,7 @@ require('cinnamon').setup {
   extended_keymaps = true,
   override_keymaps = true,
   always_scroll = true,
-  max_length = 500,
+  max_length = -1,
   scroll_limit = -1,
 }
 
@@ -246,6 +246,7 @@ require('mini.cursorword').setup({})
 
 -- treesitter (creates syntax tree for various languages)
 -- See :help nvim-treesitter-modules
+require("nvim-treesitter.install").prefer_git = true
 require('nvim-treesitter.configs').setup({
   highlight = {
     enable = true,
