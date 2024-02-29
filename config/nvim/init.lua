@@ -413,6 +413,13 @@ require("copilot").setup({
   panel = { enabled = false },
 })
 require("copilot_cmp").setup()
+cmp.event:on("menu_opened", function()
+  vim.b.copilot_suggestion_hidden = true
+end)
+
+cmp.event:on("menu_closed", function()
+  vim.b.copilot_suggestion_hidden = false
+end)
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -480,14 +487,6 @@ cmp.setup({
       end
     end, { "i", "s" }),
 }})
-
-cmp.event:on("menu_opened", function()
-  vim.b.copilot_suggestion_hidden = true
-end)
-
-cmp.event:on("menu_closed", function()
-  vim.b.copilot_suggestion_hidden = false
-end)
 
 -- custom python provider
 local function isempty(s)
