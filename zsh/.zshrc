@@ -23,7 +23,7 @@ if [[ -n $SSH_CONNECTION ]]; then
 else
     export EDITOR='nvim'
 fi
-alias v='nvim'
+alias v='/Applications/Neovide.app/Contents/MacOS/neovide'
 
 # User configuration
 alias ta='cd ~/CS166HTA/dev-env/ && ./cs1660-run-docker'
@@ -255,12 +255,12 @@ alias mac='cd ~/Github/mac-setup/'
 maccp() {
     cp -r ~/.config/nvim/* ~/Github/mac-setup/config/nvim/
     echo "nvim config copied"
+    cp -r ~/.config/neovide/* ~/Github/mac-setup/config/neovide/
+    echo "neovide config copied"
     cp -r ~/.config/kitty/* ~/Github/mac-setup/config/kitty/
     echo "kitty config copied"
     cp -r ~/.config/linearmouse/* ~/Github/mac-setup/config/linearmouse/
     echo "linearmouse config copied"
-    cp -r ~/.config/ranger/* ~/Github/mac-setup/config/ranger/
-    echo "ranger config copied"
     cp -r ~/.config/skhd/* ~/Github/mac-setup/config/skhd/
     echo "skhd config copied"
     cp -r ~/.config/yabai/* ~/Github/mac-setup/config/yabai/
