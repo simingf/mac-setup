@@ -137,6 +137,7 @@ require("lazy").setup({
   { 'stevearc/conform.nvim' },
   -- cmp (autocompletion)
   { 'hrsh7th/nvim-cmp' },
+  { 'hrsh7th/cmp-cmdline' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-buffer' },
   { 'hrsh7th/cmp-path' },
@@ -457,13 +458,10 @@ cmp.setup({
     end,
   },
   mapping = {
-    ['<Up>'] = cmp.mapping.select_prev_item(),
-    ['<Down>'] = cmp.mapping.select_next_item(),
-
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<C-y>'] = cmp.mapping.confirm({select = true}),
-    ['<CR>'] = cmp.mapping.confirm({select = false}),
+    ['<C-y>'] = cmp.config.diable,
+    ['<CR>'] = cmp.mapping.confirm({ select = false }),
 
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -487,6 +485,29 @@ cmp.setup({
       end
     end, { "i", "s" }),
 }})
+
+-- `/` cmdline setup.
+cmp.setup.cmdline('/', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- `:` cmdline setup.
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    {
+      name = 'cmdline',
+      option = {
+        ignore_cmds = { 'Man', '!' }
+      }
+    }
+  })
+})
 
 -- custom python provider
 local function isempty(s)
