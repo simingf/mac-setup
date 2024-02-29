@@ -2,6 +2,12 @@
 -- ==                           EDITOR SETTINGS                            == --
 -- ========================================================================== --
 
+if vim.g.neovide then
+  vim.o.guifont = "JetBrainsMono Nerd Font:h18"
+  vim.g.neovide_transparency = 0.7
+  vim.g.neovide_window_blurred = true
+end
+
 -- enable line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
