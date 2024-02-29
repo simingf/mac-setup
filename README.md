@@ -4,6 +4,7 @@
 
 ack
 aria2
+arp-scan
 btop
 cbonsai
 cmake
@@ -25,11 +26,12 @@ jq
 koekeishiya/formulae/skhd
 koekeishiya/formulae/yabai
 lolcat
+lua
 moon-buggy
 neofetch
-neovim
 node
-ranger
+openjdk
+python@3.11
 rig
 ripgrep
 sl
@@ -43,6 +45,7 @@ zsh
 
 ## Homebrew Casks
 
+angry-ip-scanner
 appcleaner
 arc
 betterdiscord-installer
@@ -50,6 +53,7 @@ burp-suite
 discord
 docker
 epic-games
+firefox
 font-jetbrains-mono-nerd-font
 hiddenbar
 iina
@@ -61,6 +65,7 @@ microsoft-powerpoint
 microsoft-word
 minecraft
 miniconda
+neovide
 notion
 parsec
 qbittorrent
