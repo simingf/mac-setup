@@ -5,8 +5,16 @@
 -- enable line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
+-- keep sign column on
+vim.opt.signcolumn = 'yes'
 -- highlight current line
 vim.opt.cursorline = false
+-- minimal number of screen lines to keep above and below the cursor.
+vim.opt.scrolloff = 5
+-- line wrapping
+vim.opt.wrap = true
+-- preserve indentation when line wrapping
+vim.opt.breakindent = true
 -- enable mouse for all modes
 vim.opt.mouse = 'a'
 -- include both lower and upper case for search
@@ -15,10 +23,6 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 -- disable highlighting the result of the most recent search all the time
 vim.opt.hlsearch = false
--- line wrapping
-vim.opt.wrap = true
--- preserve indentation when line wrapping
-vim.opt.breakindent = true
 -- set how many spaces a tab is
 vim.opt.tabstop = 2
 -- set how many spaces << and >> indent by
@@ -29,6 +33,9 @@ vim.opt.expandtab = true
 vim.opt.showmode = false
 -- enable hexademical colors instead of only 256 colors
 vim.opt.termguicolors = true
+-- configure how new splits should be opened
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 -- disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -40,19 +47,35 @@ vim.g.loaded_netrwPlugin = 1
 -- set the leader key
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
--- copy
-vim.keymap.set({ 'n', 'x' }, 'gy', '"+y')
--- paste
-vim.keymap.set({ 'n', 'x' }, 'gp', '"+p')
+-- bind H to ^ and L to $
+vim.keymap.set('n', 'H', '^', { noremap = true, silent = true })
+vim.keymap.set('n', 'L', '$', { noremap = true, silent = true })
+-- shift up and down to move line
+vim.keymap.set('n', '<S-Up>', 'ddkP', { noremap = true, silent = true })
+vim.keymap.set('n', '<S-Down>', 'ddp', { noremap = true, silent = true })
+-- add new line underneath or above without entering insert mode
+vim.keymap.set('n', '<leader>o', 'o<esc>')
+vim.keymap.set('n', '<leader>O', 'O<esc>')
 -- prevent x or X from modifying the internal register
 vim.keymap.set({ 'n', 'x' }, 'x', '"_x')
 vim.keymap.set({ 'n', 'x' }, 'X', '"_d')
+-- swap windows
+vim.api.nvim_set_keymap('n', '<Tab>', '<C-w>w', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>w', '<C-w>', { noremap = true, silent = true })
+-- swap tabs
+vim.api.nvim_set_keymap('n', '<bs>', '<c-^>zz', { noremap = true, silent = true })
 -- select all text in current buffer
 vim.keymap.set('n', '<leader>a', ':keepjumps normal! ggVG<cr>')
--- swap windows
-vim.api.nvim_set_keymap('n', '<Leader>w', '<C-w>', { noremap = true, silent = true })
 -- format code
 vim.keymap.set('v', '<Leader>bf', vim.lsp.buf.format, { noremap = true, silent = true })
+-- highlight when yanking (copying) text
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
 
 -- ========================================================================== --
 -- ==                           DIAGNOSTICS                                == --
@@ -164,21 +187,21 @@ require("lazy").setup({
 
 -- catppuccin setup
 require("catppuccin").setup({
-    flavour = "mocha", -- latte, frappe, macchiato, mocha
-    transparent_background = true, -- disables setting the background color.
-    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-    integrations = {
-        cmp = true,
-        gitsigns = false,
-        nvimtree = true,
-        treesitter = true,
-        notify = false,
-        mini = {
-            enabled = true,
-            indentscope_color = "",
-        },
-        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+  flavour = "mocha",             -- latte, frappe, macchiato, mocha
+  transparent_background = true, -- disables setting the background color.
+  show_end_of_buffer = false,    -- shows the '~' characters after the end of buffers
+  integrations = {
+    cmp = true,
+    gitsigns = false,
+    nvimtree = true,
+    treesitter = true,
+    notify = false,
+    mini = {
+      enabled = true,
+      indentscope_color = "",
     },
+    -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+  },
 })
 vim.cmd.colorscheme "catppuccin"
 
@@ -291,7 +314,7 @@ require('nvim-tree').setup({
     bufmap('hh', api.tree.toggle_hidden_filter, 'Toggle hidden files')
   end
 })
-vim.cmd[[hi NvimTreeNormal guibg=NONE ctermbg=NONE]]
+vim.cmd [[hi NvimTreeNormal guibg=NONE ctermbg=NONE]]
 
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
 
@@ -384,6 +407,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 require("conform").setup({
   formatters_by_ft = {
     python = { "isort", "black" },
+    cpp = { "clang-format" },
     javascript = { "prettierd" },
     typescript = { "prettierd" },
     javascriptreact = { "prettierd" },
@@ -392,14 +416,10 @@ require("conform").setup({
     json = { "prettierd" },
     markdown = { "prettierd" },
   },
-})
-
--- format on file save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*",
-  callback = function(args)
-    require("conform").format({ bufnr = args.buf })
-  end,
+  format_on_save = {
+    lsp_fallback = true,
+    timeout_ms = 500,
+  },
 })
 
 -- nvim-cmp (autocompletion)
@@ -438,7 +458,7 @@ cmp.setup({
     { name = 'nvim_lsp', keyword_length = 1 },
     { name = 'luasnip',  keyword_length = 1 },
     { name = 'buffer',   keyword_length = 2 },
-    { name = 'path', keyword_length = 3},
+    { name = 'path',     keyword_length = 3 },
   },
   window = {
     documentation = cmp.config.window.bordered()
@@ -484,7 +504,8 @@ cmp.setup({
         fallback()
       end
     end, { "i", "s" }),
-}})
+  }
+})
 
 -- `/` cmdline setup.
 cmp.setup.cmdline('/', {
@@ -511,8 +532,8 @@ cmp.setup.cmdline(':', {
 
 -- custom python provider
 local function isempty(s)
-		return s == nil or s == ""
-	end
+  return s == nil or s == ""
+end
 local function use_if_defined(val, fallback)
   return val ~= nil and val or fallback
 end
