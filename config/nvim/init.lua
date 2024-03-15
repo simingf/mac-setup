@@ -47,18 +47,20 @@ vim.g.loaded_netrwPlugin = 1
 -- set the leader key
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+-- make j and k work with wrapped lines
+vim.api.nvim_set_keymap('n', 'j', 'gj', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'k', 'gk', { noremap = true, silent = true })
 -- bind H to ^ and L to $
 vim.keymap.set('n', 'H', '^', { noremap = true, silent = true })
 vim.keymap.set('n', 'L', '$', { noremap = true, silent = true })
 -- shift up and down to move line
 vim.keymap.set('n', '<S-Up>', 'ddkP', { noremap = true, silent = true })
 vim.keymap.set('n', '<S-Down>', 'ddp', { noremap = true, silent = true })
--- add new line underneath or above without entering insert mode
-vim.keymap.set('n', '<leader>o', 'o<esc>')
-vim.keymap.set('n', '<leader>O', 'O<esc>')
+-- select all text in current buffer
+vim.keymap.set('n', '<leader>a', ':keepjumps normal! ggVG<cr>')
 -- yank and paste from clipboard
-vim.keymap.set('v', '<leader>y', '"+y')
-vim.keymap.set('n', '<leader>p', '"+p')
+vim.keymap.set('v', 'gy', '"+y')
+vim.keymap.set('n', 'gp', '"+p')
 -- prevent x or X from modifying the internal register
 vim.keymap.set({ 'n', 'x' }, 'x', '"_x')
 vim.keymap.set({ 'n', 'x' }, 'X', '"_d')
@@ -67,10 +69,6 @@ vim.api.nvim_set_keymap('n', '<Tab>', '<C-w>w', { noremap = true, silent = true 
 vim.api.nvim_set_keymap('n', '<leader>w', '<C-w>', { noremap = true, silent = true })
 -- swap tabs
 vim.api.nvim_set_keymap('n', '<bs>', '<c-^>zz', { noremap = true, silent = true })
--- select all text in current buffer
-vim.keymap.set('n', '<leader>a', ':keepjumps normal! ggVG<cr>')
--- format code
-vim.keymap.set('v', '<Leader>bf', vim.lsp.buf.format, { noremap = true, silent = true })
 -- highlight when yanking (copying) text
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
@@ -274,9 +272,11 @@ require("lazy").setup({
       })
     end
   },
+  {
+    "folke/todo-comments.nvim"
+  },
 
   -- editor utilities
-  { 'nvim-treesitter/nvim-treesitter-textobjects' },
   {
     'nvim-treesitter/nvim-treesitter',
     config = function()
@@ -294,27 +294,61 @@ require("lazy").setup({
               ['if'] = '@function.inner',
               ['ac'] = '@class.outer',
               ['ic'] = '@class.inner',
+              ['as'] = { query = '@scope', query_group = 'locals' },
             }
           },
         },
         ensure_installed = {
-          'vim', 'vimdoc', 'lua', 'bash', 'python', 'c', 'cpp', 'javascript', 'typescript', 'json', 'latex'
+          'lua', 'bash', 'python', 'javascript', 'typescript',
         },
       })
+    end
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects'
+  },
+  {
+    'ggandor/leap.nvim',
+    config = function()
+      require('leap').create_default_mappings()
+      require('leap').opts.special_keys.prev_target = '<bs>'
+      require('leap').opts.special_keys.prev_group = '<bs>'
+      require('leap.user').set_repeat_keys('<cr>', '<bs>')
     end
   },
   {
     'numToStr/Comment.nvim',
     config = true
   },
-  { 'tpope/vim-surround' },
-  {
-    'AckslD/nvim-neoclip.lua',
-    config = true
-  },
   {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
+    config = true
+  },
+  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  {
+    'nvim-telescope/telescope.nvim',
+    config = function()
+      -- fzf for a pattern in the current file
+      vim.keymap.set('n', '<leader><space>', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
+      -- grep for a pattern in current directory
+      vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
+      -- search open files
+      vim.keymap.set('n', '<leader>fo', '<cmd>Telescope buffers<cr>')
+      -- search files in current directory
+      vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>')
+      -- search recently opened files
+      vim.keymap.set('n', '<leader>fr', '<cmd>Telescope oldfiles<cr>')
+      -- search diagnostic messages
+      vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
+      -- search in clipboard
+      vim.keymap.set('n', '<leader>fy', '<cmd>Telescope neoclip<cr>')
+      -- search notifications
+      vim.keymap.set('n', '<leader>fn', '<cmd>Telescope notify<cr>')
+    end
+  },
+  {
+    'AckslD/nvim-neoclip.lua',
     config = true
   },
 
@@ -344,28 +378,6 @@ require("lazy").setup({
       vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
     end
   },
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-  {
-    'nvim-telescope/telescope.nvim',
-    config = function()
-      -- fzf for a pattern in the current file
-      vim.keymap.set('n', '<leader><space>', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
-      -- search open files
-      vim.keymap.set('n', '<leader>fo', '<cmd>Telescope buffers<cr>')
-      -- search files in current directory
-      vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>')
-      -- search recently opened files
-      vim.keymap.set('n', '<leader>fr', '<cmd>Telescope oldfiles<cr>')
-      -- grep for a pattern in current directory
-      vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
-      -- search diagnostic messages
-      vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
-      -- search in clipboard
-      vim.keymap.set('n', '<leader>fp', '<cmd>Telescope neoclip<cr>')
-      -- search notifications
-      vim.keymap.set('n', '<leader>fn', '<cmd>Telescope notify<cr>')
-    end
-  },
 
   -- mason
   {
@@ -375,7 +387,11 @@ require("lazy").setup({
   {
     'williamboman/mason-lspconfig.nvim',
     config = function()
-      require('mason-lspconfig').setup()
+      require('mason-lspconfig').setup({
+        ensure_installed = {
+          "lua_ls", "pylsp", "eslint"
+        }
+      })
       require("mason-lspconfig").setup_handlers {
         function(server_name) -- default handler (optional)
           require("lspconfig")[server_name].setup {
@@ -402,28 +418,28 @@ require("lazy").setup({
           bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
 
           -- Jump to the definition
-          bufmap('n', '<leader>jd', '<cmd>lua vim.lsp.buf.definition()<cr>')
-
-          -- Jumps to the definition of the type symbol
-          bufmap('n', '<leader>jtd', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
+          bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
 
           -- Jump to declaration
-          bufmap('n', '<leader>jdc', '<cmd>lua vim.lsp.buf.declaration()<cr>')
+          bufmap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
+
+          -- Jumps to the definition of the type symbol
+          bufmap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
 
           -- Lists all the implementations for the symbol under the cursor
-          bufmap('n', '<leader>ji', '<cmd>lua vim.lsp.buf.implementation()<cr>')
+          bufmap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
 
           -- Lists all the references
-          bufmap('n', '<leader>jr', '<cmd>lua vim.lsp.buf.references()<cr>')
+          bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
 
           -- Displays a function's signature information
-          bufmap('n', '<leader>js', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
+          bufmap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
 
           -- Renames all references to the symbol under the cursor
           bufmap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>')
 
           -- Selects a code action available at the current cursor position
-          bufmap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+          bufmap({ 'n', 'v' }, '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 
           -- Show diagnostics in a floating window
           bufmap('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<cr>')
@@ -445,7 +461,6 @@ require("lazy").setup({
       require("conform").setup({
         formatters_by_ft = {
           python = { "isort", "black" },
-          java = { "google-java-format" },
           javascript = { "prettierd" },
           typescript = { "prettierd" },
           javascriptreact = { "prettierd" },
