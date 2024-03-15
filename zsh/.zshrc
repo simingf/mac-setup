@@ -29,7 +29,8 @@ alias v='nvim'
 alias ta='cd ~/CS166HTA/dev-env/ && ./cs1660-run-docker'
 
 # OS alias
-alias os='ssh sfeng22@ssh.cs.brown.edu'
+alias os='ssh -Y sfeng22@ssh.cs.brown.edu'
+alias rd='xhost +localhost && ./run-docker'
 
 # general aliases
 alias e='exit'
@@ -42,7 +43,8 @@ alias mkdir='mkdir -p'
 # clears screenshot folder
 alias css='rm -f ~/Screenshots/* && echo "screenshots cleared"'
 # updates homebrew
-alias bup='brew update && brew autoremove && brew cleanup && brew upgrade'
+alias bup='brew update && brew upgrade && brew cleanup && brew autoremove'
+
 # lists global node modules
 alias npmg='npm list -g --depth 0'
 
@@ -285,7 +287,6 @@ macup() {
     git commit -a -m "$@"
     git push
 }
-
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
