@@ -20,6 +20,8 @@ yabai -m config --space work1 layout bsp
 yabai -m config --space work2 layout bsp
 yabai -m config --space fun layout stack
 
+yabai -m rule --add app="^Mail$" space=home
+yabai -m rule --add app="^Calendar$" space=home
 yabai -m rule --add app="^Notion$" space=home
 yabai -m rule --add app="^Microsoft To Do$" space=home
 yabai -m rule --add app="^Calendar$" space=home
