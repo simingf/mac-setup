@@ -5,6 +5,7 @@
 ack
 aria2
 arp-scan
+bear
 cbonsai
 cmake
 cmatrix
@@ -17,6 +18,7 @@ fortune
 fzf
 git
 git-lfs
+gping
 graphviz
 grep
 imagemagick
@@ -24,6 +26,7 @@ jesseduffield/lazygit/lazygit
 jq
 koekeishiya/formulae/skhd
 koekeishiya/formulae/yabai
+llvm
 lolcat
 lua
 moon-buggy
@@ -31,6 +34,7 @@ neofetch
 neovim
 node
 openjdk
+pandoc
 rig
 ripgrep
 sl
@@ -47,6 +51,7 @@ zsh
 angry-ip-scanner
 appcleaner
 arc
+basictex
 betterdiscord-installer
 burp-suite
 discord
@@ -58,6 +63,7 @@ hiddenbar
 iina
 kitty
 linearmouse
+loom
 microsoft-auto-update
 microsoft-excel
 microsoft-powerpoint
@@ -70,12 +76,15 @@ qbittorrent
 slack
 spotify
 steam
+temurin
+tetrio
 the-unarchiver
 ubersicht
 visual-studio-code
 wechat
 whatsapp
 wireshark
+xquartz
 zoom
 
 ## Install Via Command Line
