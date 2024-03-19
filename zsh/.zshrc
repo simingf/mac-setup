@@ -187,6 +187,9 @@ k() {
     fi
 }
 
+# competitive programming alias
+alias rr='make && ./sol'
+
 # image magick function
 img() {
     magick "$1" "$2"
@@ -274,6 +277,10 @@ maccp() {
 
     cp ~/.zshrc ~/Github/mac-setup/zsh/
     echo "zsh config copied"
+
+    cp ~/.clangd ~/Github/mac-setup/clang/
+    cp ~/.clang-format ~/Github/mac-setup/clang/
+    echo "clang config copied"
 
     echo ""
     echo "all configs copied to mac-setup!"
